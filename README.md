@@ -1,6 +1,8 @@
+![r7XnMq.png](https://i3.lensdump.com/i/r7XnMq.png)
+
 ### Kickstart/Crowdfunding
 
-This is a Crowdfunding smart contract implementation coopted from the Udemy course - Ethereum and Solidity: The Complete Developer's Guide 
+This is a Crowdfunding smart contract implementation coopted from the Udemy course - Ethereum and Solidity: The Complete Developer's Guide. 
 
 ### Languages/Toolset
 - Solidity (Ethereum Smart Contracts)
