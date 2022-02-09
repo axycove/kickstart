@@ -6,8 +6,9 @@ This is a Crowdfunding smart contract implementation coopted from the Udemy cour
 
 ### Languages/Toolset
 - Solidity (Ethereum Smart Contracts)
+- [Remix IDE](https://remix.ethereum.org/) (Solidity Tests/Debugging)
 - JavaScript/ReactJS/NextJS (Client/server)
-- Moocha (Testing)
+- Moocha (Tests)
 - Web3 (Blockchain interfacing)
 
 ### Credits/Disclaimer
