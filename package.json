@@ -1,0 +1,36 @@
+{
+  "name": "kickstart",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node src/hooks/server.js",
+    "dev": "node src/hooks/server.js",
+    "build": "next build",
+    "test": "mocha",
+    "compile": "node ethereum/compile.js",
+    "deploy": "node ethereum/deploy.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@artsy/fresnel": "^3.2.2",
+    "@truffle/hdwallet-provider": "^2.0.3",
+    "dotenv": "^16.0.0",
+    "fs-extra": "^10.0.0",
+    "ganache-cli": "^6.12.2",
+    "lodash": "^4.17.21",
+    "mocha": "^9.2.0",
+    "next": "^12.0.10",
+    "next-routes": "^1.4.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.1.1",
+    "solc": "^0.8.11",
+    "web3": "^1.3.3"
+  },
+  "devDependencies": {
+    "dotenv-webpack": "^7.1.0"
+  }
+}
