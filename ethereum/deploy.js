@@ -1,8 +1,13 @@
-const HDWalletProvider = require('truffle-hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 const Web3 = require('web3');
 const compiledFactory = require('./build/CampaignFactory.json');
+require('dotenv').config();
 
-const provider = new HDWalletProvider(process.env.SECRET, process.env.RINKEBY_ENDPOINT);
+const provider = new HDWalletProvider({
+  mnemonic: process.env.SECRET,
+  providerOrUrl: process.env.RINKEBY_ENDPOINT,
+});
+
 const web3 = new Web3(provider);
 
 const deploy = async () => {

@@ -3,7 +3,7 @@ import { Container } from 'semantic-ui-react';
 import Head from 'next/head';
 import Header from '../elements/Header';
 
-export default props => {
+export default function fn(props) {
   return (
     <Container>
       <Head>

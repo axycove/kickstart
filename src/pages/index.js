@@ -5,10 +5,9 @@ import Layout from '@layouts';
 import { Header } from '@elements';
 import { Link } from '@routes';
 
-class Index extends Component {
+class CampaignIndex extends Component {
   static async getInitialProps() {
     const campaigns = await factory.methods.getCampaigns().call();
-
     return { campaigns };
   }
 
@@ -19,9 +18,9 @@ class Index extends Component {
         header: address,
         description: (
           <Link route={`/campaigns/${address}`}>
-            <a>View Campaign</a>
+            <a>View campaign</a>
           </Link>
-        ),
+        ),    
         fluid: true,
         color: 'green',
       };
@@ -38,7 +37,7 @@ class Index extends Component {
           <a>
             <Button floated="right" primary animated="fade">
               <Button.Content visible>
-                <Icon name="add circle" /> Create Campaign
+                <Icon name="add circle" /> Create campaign
               </Button.Content>
               <Button.Content hidden>
                 <Icon name="handshake outline" size="large" />
@@ -52,4 +51,4 @@ class Index extends Component {
   }
 }
 
-export default Index;
+export default CampaignIndex;

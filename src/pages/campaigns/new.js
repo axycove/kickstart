@@ -5,12 +5,12 @@ import { Header } from '@elements';
 import { Router } from '@routes';
 import { factory, web3 } from '@ethereum';
 
-class New extends Component {
+class CampaignNew extends Component {
   state = {
     minimumContribution: '',
     msgHeader: '',
     msgContent: '',
-    fLoading: false,
+    loading: false,
     success: false,
     error: false,
   };
@@ -22,11 +22,11 @@ class New extends Component {
     try {
       if (Number(minimumContribution) > 0) {
         this.setState({
-          fLoading: true,
+          loading: true,
           success: true,
           error: false,
           msgHeader: 'Transaction',
-          msgContent: 'Waiting on Transaction success...',
+          msgContent: 'Waiting on transaction success...',
         });
 
         const accounts = await web3.eth.getAccounts();
@@ -35,7 +35,7 @@ class New extends Component {
         });
 
         this.setState({
-          fLoading: false,
+          loading: false,
           success: true,
           error: false,
           msgHeader: 'Congratulations!',
@@ -48,11 +48,11 @@ class New extends Component {
         }, 1000);
       } else {
         this.setState({
-          fLoading: false,
+          loading: false,
           success: false,
           error: true,
-          msgHeader: 'Minimu Contribution',
-          msgContent: 'Minimum Contribution is required',
+          msgHeader: 'Minimum contribution',
+          msgContent: 'Minimum contribution is required',
         });
       }
     } catch (err) {
@@ -64,10 +64,10 @@ class New extends Component {
       }
 
       this.setState({
-        fLoading: false,
+        loading: false,
         success: false,
         error: true,
-        msgHeader: 'Transaction Error',
+        msgHeader: 'Transaction error',
         msgContent: msg,
       });
     }
@@ -79,22 +79,22 @@ class New extends Component {
   };
 
   render() {
-    const { fLoading, minimumContribution, error, success, msgHeader, msgContent } = this.state;
+    const { loading, minimumContribution, error, success, msgHeader, msgContent } = this.state;
 
     return (
       <Layout>
-        <Header text="Create a Campaign" divider />
+        <Header text="Create a campaign" divider />
         <Container textAlign="center" text>
           <Form
             style={{ marginTop: '10rem' }}
             onSubmit={this.handleSubmit}
             error={error}
             success={success}
-            loading={fLoading}
+            loading={loading}
           >
             <Form.Field>
-              <label style={{ marginBottom: '2rem' }} className="text-uppercase">
-                Minimum Contribution
+              <label style={{ marginBottom: '2rem' }}>
+                Minimum contribution
               </label>
               <Input
                 labelPosition="right"
@@ -109,7 +109,7 @@ class New extends Component {
               </Input>
             </Form.Field>
             <Button primary type="submit">
-              CREATE
+              Create!
             </Button>
             <Message success header={msgHeader} content={msgContent} />
             <Message error header={msgHeader} content={msgContent} />
@@ -120,4 +120,4 @@ class New extends Component {
   }
 }
 
-export default New;
+export default CampaignNew;

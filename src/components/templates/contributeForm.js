@@ -25,26 +25,27 @@ class ContributeForm extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const { amount } = this.state;
-    const { mc, ca } = this.props;
+    const { minimumContribution, contractAddress } = this.props;
 
     try {
-      if (Number(amount) >= Number(web3.utils.fromWei(mc, 'ether'))) {
+      if (Number(amount) >= Number(web3.utils.fromWei(minimumContribution, 'ether'))) {
         this.setState({
           fLoading: true,
           success: true,
           error: false,
           msgHeader: 'Transaction',
-          msgContent: 'Waiting on Transaction success...',
+          msgContent: 'Waiting on transaction success...',
         });
 
         this.handleUpdateMsgs({
           success: true,
           error: false,
           msgHeader: 'Transaction',
-          msgContent: 'Waiting on Transaction success...',
+          msgContent: 'Waiting on transaction success...',
         });
 
-        const campaign = Campaign(ca);
+        console.log(contractAddress);
+        const campaign = Campaign(contractAddress);
         const accounts = await web3.eth.getAccounts();
         await campaign.methods.contribute().send({
           from: accounts[0],
@@ -68,7 +69,7 @@ class ContributeForm extends Component {
         });
 
         setTimeout(() => {
-          Router.replaceRoute('/campaigns/' + ca);
+          Router.replaceRoute('/campaigns/' + contractAddress);
           setTimeout(() => {
             this.setState({ error: false, success: false, msgHeader: '', msgContent: '' });
             this.handleUpdateMsgs({ error: false, success: false, msgHeader: '', msgContent: '' });
@@ -79,14 +80,14 @@ class ContributeForm extends Component {
           fLoading: false,
           success: false,
           error: true,
-          msgHeader: 'Minimu Contribution',
-          msgContent: 'Amount must be greater than Minimum Contribution',
+          msgHeader: 'Minimum contribution',
+          msgContent: 'Amount must be greater than minimum contribution',
         });
         this.handleUpdateMsgs({
           success: false,
           error: true,
-          msgHeader: 'Minimu Contribution',
-          msgContent: 'Amount must be greater than Minimum Contribution',
+          msgHeader: 'Minimum contribution',
+          msgContent: 'Amount must be greater than minimum contribution',
         });
       }
     } catch (err) {
@@ -101,14 +102,14 @@ class ContributeForm extends Component {
         fLoading: false,
         success: false,
         error: true,
-        msgHeader: 'Transaction Error',
+        msgHeader: 'Transaction error',
         msgContent: msg,
       });
 
       this.handleUpdateMsgs({
         success: false,
         error: true,
-        msgHeader: 'Transaction Error',
+        msgHeader: 'Transaction error',
         msgContent: msg,
       });
     }
@@ -145,7 +146,7 @@ class ContributeForm extends Component {
           </Input>
         </Form.Field>
         <Button primary type="submit">
-          CONTRIBUTE
+          Contribute
         </Button>
         {showMsgs ? (
           <>

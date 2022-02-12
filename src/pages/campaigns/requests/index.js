@@ -68,13 +68,12 @@ class RequestIndex extends Component {
     const { error, success, msgHeader, msgContent } = this.state;
 
     if (err) {
-      // ERROR HANDLING IF QUERY IS WRONGLY ENTERED
       return <ErrorPage statusCode={404} />;
     }
 
     return (
       <Layout>
-        <Header add route={`/campaigns/${address}/requests/new`} text="View Requests" divider />
+        <Header add route={`/campaigns/${address}/requests/new`} text="View requests" divider />
         {success ? (
           <Message
             style={{ textAlign: 'center' }}
