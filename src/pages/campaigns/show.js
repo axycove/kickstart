@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ErrorPage from 'next/error';
 import { Card, Button, Divider, Message } from 'semantic-ui-react';
 import { Link } from '@routes';
@@ -7,36 +7,17 @@ import { Header } from '@elements';
 import { ContributeForm } from '@templates';
 import { Campaign, web3 } from '@ethereum';
 
-class CampaignShow extends Component {
-  static async getInitialProps({ query }) {
-    try {
-      const { address } = query;
-      const campaign = Campaign(address);
-      const summary = await campaign.methods.getSummary().call();
-
-      return {
-        minimumContribution: summary[0],
-        campaignBalance: summary[1],
-        requestsCount: summary[2],
-        approversCount: summary[3],
-        managerAddress: summary[4],
-        contractAddress: address,
-      };
-    } catch (error) {
-      return { error };
-    }
-  }
-
-  state = {
+function CampaignShow(props) {
+  const [state, setState] = React.useState({
     success: false,
     error: false,
     msgHeader: '',
     msgContent: '',
-  };
+  });
 
-  renderCards = () => {
+  const renderCards = () => {
     const { minimumContribution, campaignBalance, requestsCount, approversCount, managerAddress } =
-      this.props;
+      props;
 
     const items = [
       {
@@ -85,18 +66,18 @@ class CampaignShow extends Component {
             Contribute to this campaign
           </span>
         ),
-        description: this.renderContribute(),
+        description: renderContribute(),
       },
     ];
 
     return <Card.Group centered items={items} />;
   };
 
-  renderContribute = () => {
-    const { minimumContribution, contractAddress } = this.props;
+  const renderContribute = () => {
+    const { minimumContribution, contractAddress } = props;
     return (
       <ContributeForm
-        updateMsgs={this.handleUpdateMsgs}
+        updateMsgs={handleUpdateMsgs}
         showMsgs={false}
         style={{ textAlign: 'center', marginTop: '4px' }}
         minimumContribution={minimumContribution}
@@ -105,55 +86,71 @@ class CampaignShow extends Component {
     );
   };
 
-  handleUpdateMsgs = (msgObj) => {
+  const handleUpdateMsgs = (msgObj) => {
     const { success, error, msgHeader, msgContent } = msgObj;
-    this.setState({ success, error, msgHeader, msgContent });
+    setState({ success, error, msgHeader, msgContent });
   };
+  const { requestsCount, contractAddress, err } = props;
+  const { success, error, msgHeader, msgContent } = state;
 
-  render() {
-    const { requestsCount, contractAddress, err } = this.props;
-    const { success, error, msgHeader, msgContent } = this.state;
-
-    if (err) {
-      return <ErrorPage statusCode={404} />;
-    }
-
-    return (
-      <Layout>
-        <Header text="Campaign summary" divider />
-        {this.renderCards()}
-        <Divider />
-        {success ? (
-          <Message
-            style={{ textAlign: 'center' }}
-            success={success}
-            header={msgHeader}
-            content={msgContent}
-          />
-        ) : null}
-        {error ? (
-          <Message
-            style={{ textAlign: 'center' }}
-            error={error}
-            header={msgHeader}
-            content={msgContent}
-          />
-        ) : null}
-        <Header style={{ marginTop: '5rem' }} text="Campaign Requests" divider />
-        <Link route={`/campaigns/${contractAddress}/requests`}>
-          <a>
-            <Button
-              style={{ display: 'flex', justifyContent: 'center' }}
-              color="red"
-              content="View requests"
-              icon="bullhorn"
-              label={{ basic: true, color: 'red', pointing: 'left', content: requestsCount }}
-            />
-          </a>
-        </Link>
-      </Layout>
-    );
+  if (err) {
+    return <ErrorPage statusCode={404} />;
   }
+
+  return (
+    <Layout>
+      <Header text="Campaign summary" divider />
+      {renderCards()}
+      <Divider />
+      {success ? (
+        <Message
+          style={{ textAlign: 'center' }}
+          success={success}
+          header={msgHeader}
+          content={msgContent}
+        />
+      ) : null}
+      {error ? (
+        <Message
+          style={{ textAlign: 'center' }}
+          error={error}
+          header={msgHeader}
+          content={msgContent}
+        />
+      ) : null}
+      <Header style={{ marginTop: '5rem' }} text="Campaign Requests" divider />
+      <Link route={`/campaigns/${contractAddress}/requests`}>
+        <a>
+          <Button
+            style={{ display: 'flex', justifyContent: 'center' }}
+            color="red"
+            content="View requests"
+            icon="bullhorn"
+            label={{ basic: true, color: 'red', pointing: 'left', content: requestsCount }}
+          />
+        </a>
+      </Link>
+    </Layout>
+  );
 }
+
+CampaignShow.getInitialProps = async ({ query }) => {
+  try {
+    const { address } = query;
+    const campaign = Campaign(address);
+    const summary = await campaign.methods.getSummary().call();
+
+    return {
+      minimumContribution: summary[0],
+      campaignBalance: summary[1],
+      requestsCount: summary[2],
+      approversCount: summary[3],
+      managerAddress: summary[4],
+      contractAddress: address,
+    };
+  } catch (error) {
+    return { error };
+  }
+};
 
 export default CampaignShow;

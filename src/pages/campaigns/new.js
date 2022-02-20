@@ -1,27 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Form, Button, Container, Input, Label, Message } from 'semantic-ui-react';
 import Layout from '@layouts';
 import { Header } from '@elements';
 import { Router } from '@routes';
 import { factory, web3 } from '@ethereum';
 
-class CampaignNew extends Component {
-  state = {
+function CampaignNew() {
+  const [state, setState] = React.useState({
     minimumContribution: '',
     msgHeader: '',
     msgContent: '',
     loading: false,
     success: false,
     error: false,
-  };
+  });
 
-  handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { minimumContribution } = this.state;
+    const { minimumContribution } = state;
 
     try {
       if (Number(minimumContribution) > 0) {
-        this.setState({
+        setState({
           loading: true,
           success: true,
           error: false,
@@ -34,7 +34,7 @@ class CampaignNew extends Component {
           from: accounts[0],
         });
 
-        this.setState({
+        setState({
           loading: false,
           success: true,
           error: false,
@@ -47,7 +47,7 @@ class CampaignNew extends Component {
           Router.pushRoute('/');
         }, 1000);
       } else {
-        this.setState({
+        setState({
           loading: false,
           success: false,
           error: true,
@@ -63,7 +63,7 @@ class CampaignNew extends Component {
         msg = err.message;
       }
 
-      this.setState({
+      setState({
         loading: false,
         success: false,
         error: true,
@@ -73,51 +73,47 @@ class CampaignNew extends Component {
     }
   };
 
-  handleMinimumContributionInput = (e) => {
+  const handleMinimumContributionInput = (e) => {
     const { value } = e.target;
-    this.setState({ minimumContribution: value });
+    setState({ minimumContribution: value });
   };
 
-  render() {
-    const { loading, minimumContribution, error, success, msgHeader, msgContent } = this.state;
+  const { loading, minimumContribution, error, success, msgHeader, msgContent } = state;
 
-    return (
-      <Layout>
-        <Header text="Create a campaign" divider />
-        <Container textAlign="center" text>
-          <Form
-            style={{ marginTop: '10rem' }}
-            onSubmit={this.handleSubmit}
-            error={error}
-            success={success}
-            loading={loading}
-          >
-            <Form.Field>
-              <label style={{ marginBottom: '2rem' }}>
-                Minimum contribution
-              </label>
-              <Input
-                labelPosition="right"
-                type="number"
-                placeholder="Amount"
-                value={minimumContribution}
-                onChange={this.handleMinimumContributionInput}
-              >
-                <Label basic>&#9830;</Label>
-                <input />
-                <Label>WEI</Label>
-              </Input>
-            </Form.Field>
-            <Button primary type="submit">
-              Create!
-            </Button>
-            <Message success header={msgHeader} content={msgContent} />
-            <Message error header={msgHeader} content={msgContent} />
-          </Form>
-        </Container>
-      </Layout>
-    );
-  }
+  return (
+    <Layout>
+      <Header text="Create a campaign" divider />
+      <Container textAlign="center" text>
+        <Form
+          style={{ marginTop: '10rem' }}
+          onSubmit={handleSubmit}
+          error={error}
+          success={success}
+          loading={loading}
+        >
+          <Form.Field>
+            <label style={{ marginBottom: '2rem' }}>Minimum contribution</label>
+            <Input
+              labelPosition="right"
+              type="number"
+              placeholder="Amount"
+              value={minimumContribution}
+              onChange={handleMinimumContributionInput}
+            >
+              <Label basic>&#9830;</Label>
+              <input />
+              <Label>WEI</Label>
+            </Input>
+          </Form.Field>
+          <Button primary type="submit">
+            Create!
+          </Button>
+          <Message success header={msgHeader} content={msgContent} />
+          <Message error header={msgHeader} content={msgContent} />
+        </Form>
+      </Container>
+    </Layout>
+  );
 }
 
 export default CampaignNew;

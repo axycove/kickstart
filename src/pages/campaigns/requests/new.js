@@ -1,21 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ErrorPage from 'next/error';
 import { Container, Form, Input, Button, Message } from 'semantic-ui-react';
 import Layout from '@layouts';
 import { Header } from '@elements';
 import { Campaign, web3 } from '@ethereum';
 
-class RequestNew extends Component {
-  static async getInitialProps({ query }) {
-    try {
-      const address = query.address;
-      return { address };
-    } catch (err) {
-      return { err };
-    }
-  }
-
-  state = {
+function RequestNew(props) {
+  const [state, setState] = React.useState({
     description: '',
     amount: '',
     recipient: '',
@@ -24,21 +15,21 @@ class RequestNew extends Component {
     fLoading: false,
     success: false,
     error: false,
-  };
+  });
 
-  handleInput = (e) => {
+  const handleInput = (e) => {
     const { value, name } = e.target;
-    this.setState({ [name]: value });
+    setState({ [name]: value });
   };
 
-  handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { address } = this.props;
-    const { recipient, amount, description } = this.state;
+    const { address } = props;
+    const { recipient, amount, description } = state;
 
     try {
       if (amount > 0 && description.length && web3.utils.isAddress(recipient)) {
-        this.setState({
+        setState({
           fLoading: true,
           success: true,
           error: false,
@@ -54,7 +45,7 @@ class RequestNew extends Component {
             from: accounts[0],
           });
 
-        this.setState({
+        setState({
           fLoading: false,
           success: true,
           error: false,
@@ -65,7 +56,7 @@ class RequestNew extends Component {
           recipient: '',
         });
       } else {
-        this.setState({
+        setState({
           fLoading: false,
           success: false,
           error: true,
@@ -81,7 +72,7 @@ class RequestNew extends Component {
         msg = err.message;
       }
 
-      this.setState({
+      setState({
         fLoading: false,
         success: false,
         error: true,
@@ -91,69 +82,75 @@ class RequestNew extends Component {
     }
   };
 
-  render() {
-    const { address, err } = this.props;
-    const { description, amount, recipient, fLoading, error, success, msgHeader, msgContent } =
-      this.state;
+  const { address, err } = props;
+  const { description, amount, recipient, fLoading, error, success, msgHeader, msgContent } = state;
 
-    if (err) {
-      return <ErrorPage statusCode={404} />;
-    }
-
-    return (
-      <Layout>
-        <Header back route={`/campaigns/${address}/requests`} text="Create a request" divider />
-        <Container textAlign="center" text>
-          <Form
-            style={{ marginTop: '5rem' }}
-            onSubmit={this.handleSubmit}
-            error={error}
-            success={success}
-            loading={fLoading}
-          >
-            <Form.Field>
-              <label style={{ marginBottom: '4px' }}>Request description</label>
-              <Input
-                required
-                onChange={this.handleInput}
-                value={description}
-                name="description"
-                icon="question circle"
-                iconPosition="left"
-                placeholder="Description..."
-              />
-              <label style={{ marginBottom: '4px', marginTop: '2rem' }}>Request amount (ETH)</label>
-              <Input
-                required
-                onChange={this.handleInput}
-                type="number"
-                value={amount}
-                name="amount"
-                icon="money bill alternate"
-                iconPosition="left"
-                placeholder="Withdraw amount..."
-              />
-              <label style={{ marginTop: '2rem' }}>Request recipient</label>
-              <Input
-                required
-                onChange={this.handleInput}
-                value={recipient}
-                name="recipient"
-                icon="ethereum"
-                iconPosition="left"
-                placeholder="Recipient address..."
-              />
-            </Form.Field>
-            <Button primary type="submit">
-              Create request
-            </Button>
-            <Message success header={msgHeader} content={msgContent} />
-            <Message error header={msgHeader} content={msgContent} />
-          </Form>
-        </Container>
-      </Layout>
-    );
+  if (err) {
+    return <ErrorPage statusCode={404} />;
   }
+
+  return (
+    <Layout>
+      <Header back route={`/campaigns/${address}/requests`} text="Create a request" divider />
+      <Container textAlign="center" text>
+        <Form
+          style={{ marginTop: '5rem' }}
+          onSubmit={handleSubmit}
+          error={error}
+          success={success}
+          loading={fLoading}
+        >
+          <Form.Field>
+            <label style={{ marginBottom: '4px' }}>Request description</label>
+            <Input
+              required
+              onChange={handleInput}
+              value={description}
+              name="description"
+              icon="question circle"
+              iconPosition="left"
+              placeholder="Description..."
+            />
+            <label style={{ marginBottom: '4px', marginTop: '2rem' }}>Request amount (ETH)</label>
+            <Input
+              required
+              onChange={handleInput}
+              type="number"
+              value={amount}
+              name="amount"
+              icon="money bill alternate"
+              iconPosition="left"
+              placeholder="Withdraw amount..."
+            />
+            <label style={{ marginTop: '2rem' }}>Request recipient</label>
+            <Input
+              required
+              onChange={handleInput}
+              value={recipient}
+              name="recipient"
+              icon="ethereum"
+              iconPosition="left"
+              placeholder="Recipient address..."
+            />
+          </Form.Field>
+          <Button primary type="submit">
+            Create request
+          </Button>
+          <Message success header={msgHeader} content={msgContent} />
+          <Message error header={msgHeader} content={msgContent} />
+        </Form>
+      </Container>
+    </Layout>
+  );
 }
+
+RequestNew.getInitialProps = async ({ query }) => {
+  try {
+    const address = query.address;
+    return { address };
+  } catch (err) {
+    return { err };
+  }
+};
 
 export default RequestNew;
